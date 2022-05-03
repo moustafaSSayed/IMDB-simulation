@@ -26,7 +26,7 @@
 
         /*start  navbar */
         nav {
-            background-color: #07404A;
+            background-color: #191919;
             color: white;
             position: fixed;
             top: 0;
@@ -34,11 +34,24 @@
 
             nav a {
                 color: #C2C8C5 !important;
+                position: relative;
             }
 
                 nav a:hover {
                     color: white !important;
                 }
+
+            nav ul li a:hover::after, nav ul li .active::after {
+                content: " ";
+                width: 0px;
+                height: 0px;
+                position: absolute;
+                top: 35px;
+                left: 50%;
+                bottom: -50%;
+                border: 3px solid white;
+                border-radius: 50%;
+            }
 
             nav .navbar-brand img {
                 width: 215px;
@@ -56,12 +69,13 @@
 
         /* start footer */
         footer {
-            background-color: #07404A;
+            background-color: #191919;
             text-align: center;
             color: white;
             height: 50px;
         }
         /* end footer */
+
     </style>
 </head>
 <body>
@@ -88,10 +102,11 @@
                     </li>
                 </ul>
                 <form class="d-flex">
-                    <input class="form-control" type="text" placeholder="Search">
+                    <input class="form-control" type="text" placeholder="Search...">
                 </form>
-                <div class="d-flex" id="guest">
+                <div class="d-flex" style="align-items: center;" id="guest">
                     <a href="#" class="nav-link">Sign in</a>
+                    /
                     <a href="#" class="nav-link">Login</a>
                 </div>
                 <!--show when user login-->
@@ -106,7 +121,7 @@
         </div>
     </nav>
     <!--end navbar-->
-        @RenderBody()
+    @RenderBody()
     <!--start footer-->
     <footer>
         <div class="container">
