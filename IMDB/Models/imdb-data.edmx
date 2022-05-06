@@ -1,0 +1,590 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="IMDb_dataModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Actors">
+          <Key>
+            <PropertyRef Name="actorID" />
+          </Key>
+          <Property Name="actorID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="firstName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="lastName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="actorAge" Type="int" Nullable="false" />
+          <Property Name="actor_photo" Type="image" />
+          <Property Name="info" Type="varchar(max)" />
+        </EntityType>
+        <EntityType Name="ActsIn">
+          <Key>
+            <PropertyRef Name="actorID" />
+            <PropertyRef Name="movieName" />
+          </Key>
+          <Property Name="actorID" Type="int" Nullable="false" />
+          <Property Name="movieName" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Admins">
+          <Key>
+            <PropertyRef Name="username" />
+            <PropertyRef Name="password" />
+          </Key>
+          <Property Name="username" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="password" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Directors">
+          <Key>
+            <PropertyRef Name="directorID" />
+          </Key>
+          <Property Name="directorID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="firstName" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="lastName" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="directorAge" Type="int" Nullable="false" />
+          <Property Name="info" Type="varchar(max)" />
+          <Property Name="director_photo" Type="image" />
+        </EntityType>
+        <EntityType Name="Movies">
+          <Key>
+            <PropertyRef Name="name" />
+          </Key>
+          <Property Name="directorID" Type="int" />
+          <Property Name="name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="category" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="paragraph" Type="varchar(max)" />
+          <Property Name="movies_photo" Type="image" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'IMDb_data.dbo.user_comment' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="user_comment">
+          <Key>
+            <PropertyRef Name="userID" />
+            <PropertyRef Name="movie_name" />
+            <PropertyRef Name="comment" />
+          </Key>
+          <Property Name="userID" Type="int" Nullable="false" />
+          <Property Name="movie_name" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="comment" Type="varchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="User_fv_Actors">
+          <Key>
+            <PropertyRef Name="userID" />
+            <PropertyRef Name="actorID" />
+          </Key>
+          <Property Name="userID" Type="int" Nullable="false" />
+          <Property Name="actorID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="User_fv_directors">
+          <Key>
+            <PropertyRef Name="userID" />
+            <PropertyRef Name="directorID" />
+          </Key>
+          <Property Name="userID" Type="int" Nullable="false" />
+          <Property Name="directorID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="User_fv_Movies">
+          <Key>
+            <PropertyRef Name="userID" />
+            <PropertyRef Name="movieName" />
+          </Key>
+          <Property Name="userID" Type="int" Nullable="false" />
+          <Property Name="movieName" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="email" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="firstName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="lastName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="password" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="user_photo" Type="image" />
+        </EntityType>
+        <Association Name="FK__ActsIn__actorID__398D8EEE">
+          <End Role="Actors" Type="Self.Actors" Multiplicity="1" />
+          <End Role="ActsIn" Type="Self.ActsIn" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Actors">
+              <PropertyRef Name="actorID" />
+            </Principal>
+            <Dependent Role="ActsIn">
+              <PropertyRef Name="actorID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ActsIn__movieNam__3A81B327">
+          <End Role="Movies" Type="Self.Movies" Multiplicity="1" />
+          <End Role="ActsIn" Type="Self.ActsIn" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Movies">
+              <PropertyRef Name="name" />
+            </Principal>
+            <Dependent Role="ActsIn">
+              <PropertyRef Name="movieName" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Movies__director__3B75D760">
+          <End Role="Directors" Type="Self.Directors" Multiplicity="0..1" />
+          <End Role="Movies" Type="Self.Movies" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Directors">
+              <PropertyRef Name="directorID" />
+            </Principal>
+            <Dependent Role="Movies">
+              <PropertyRef Name="directorID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__user_comm__movie__3D5E1FD2">
+          <End Role="Movies" Type="Self.Movies" Multiplicity="1" />
+          <End Role="user_comment" Type="Self.user_comment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Movies">
+              <PropertyRef Name="name" />
+            </Principal>
+            <Dependent Role="user_comment">
+              <PropertyRef Name="movie_name" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__user_comm__userI__3C69FB99">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="user_comment" Type="Self.user_comment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="user_comment">
+              <PropertyRef Name="userID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__User_fv_A__userI__3E52440B">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="User_fv_Actors" Type="Self.User_fv_Actors" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="User_fv_Actors">
+              <PropertyRef Name="userID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__User_fv_d__userI__403A8C7D">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="User_fv_directors" Type="Self.User_fv_directors" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="User_fv_directors">
+              <PropertyRef Name="userID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__User_fv_M__movie__4316F928">
+          <End Role="Movies" Type="Self.Movies" Multiplicity="1" />
+          <End Role="User_fv_Movies" Type="Self.User_fv_Movies" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Movies">
+              <PropertyRef Name="name" />
+            </Principal>
+            <Dependent Role="User_fv_Movies">
+              <PropertyRef Name="movieName" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__User_fv_M__userI__4222D4EF">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="User_fv_Movies" Type="Self.User_fv_Movies" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="User_fv_Movies">
+              <PropertyRef Name="userID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_FavActors">
+          <End Role="Actors" Type="Self.Actors" Multiplicity="1" />
+          <End Role="User_fv_Actors" Type="Self.User_fv_Actors" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Actors">
+              <PropertyRef Name="actorID" />
+            </Principal>
+            <Dependent Role="User_fv_Actors">
+              <PropertyRef Name="actorID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_FavDirectors">
+          <End Role="Directors" Type="Self.Directors" Multiplicity="1" />
+          <End Role="User_fv_directors" Type="Self.User_fv_directors" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Directors">
+              <PropertyRef Name="directorID" />
+            </Principal>
+            <Dependent Role="User_fv_directors">
+              <PropertyRef Name="directorID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="IMDb_dataModelStoreContainer">
+          <EntitySet Name="Actors" EntityType="Self.Actors" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ActsIn" EntityType="Self.ActsIn" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Admins" EntityType="Self.Admins" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Directors" EntityType="Self.Directors" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Movies" EntityType="Self.Movies" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="User_fv_Actors" EntityType="Self.User_fv_Actors" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="User_fv_directors" EntityType="Self.User_fv_directors" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="User_fv_Movies" EntityType="Self.User_fv_Movies" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="user_comment" EntityType="Self.user_comment" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+[user_comment].[userID] AS [userID], 
+[user_comment].[movie_name] AS [movie_name], 
+[user_comment].[comment] AS [comment]
+FROM [dbo].[user_comment] AS [user_comment]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK__ActsIn__actorID__398D8EEE" Association="Self.FK__ActsIn__actorID__398D8EEE">
+            <End Role="Actors" EntitySet="Actors" />
+            <End Role="ActsIn" EntitySet="ActsIn" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ActsIn__movieNam__3A81B327" Association="Self.FK__ActsIn__movieNam__3A81B327">
+            <End Role="Movies" EntitySet="Movies" />
+            <End Role="ActsIn" EntitySet="ActsIn" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Movies__director__3B75D760" Association="Self.FK__Movies__director__3B75D760">
+            <End Role="Directors" EntitySet="Directors" />
+            <End Role="Movies" EntitySet="Movies" />
+          </AssociationSet>
+          <AssociationSet Name="FK__user_comm__movie__3D5E1FD2" Association="Self.FK__user_comm__movie__3D5E1FD2">
+            <End Role="Movies" EntitySet="Movies" />
+            <End Role="user_comment" EntitySet="user_comment" />
+          </AssociationSet>
+          <AssociationSet Name="FK__user_comm__userI__3C69FB99" Association="Self.FK__user_comm__userI__3C69FB99">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="user_comment" EntitySet="user_comment" />
+          </AssociationSet>
+          <AssociationSet Name="FK__User_fv_A__userI__3E52440B" Association="Self.FK__User_fv_A__userI__3E52440B">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="User_fv_Actors" EntitySet="User_fv_Actors" />
+          </AssociationSet>
+          <AssociationSet Name="FK__User_fv_d__userI__403A8C7D" Association="Self.FK__User_fv_d__userI__403A8C7D">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="User_fv_directors" EntitySet="User_fv_directors" />
+          </AssociationSet>
+          <AssociationSet Name="FK__User_fv_M__movie__4316F928" Association="Self.FK__User_fv_M__movie__4316F928">
+            <End Role="Movies" EntitySet="Movies" />
+            <End Role="User_fv_Movies" EntitySet="User_fv_Movies" />
+          </AssociationSet>
+          <AssociationSet Name="FK__User_fv_M__userI__4222D4EF" Association="Self.FK__User_fv_M__userI__4222D4EF">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="User_fv_Movies" EntitySet="User_fv_Movies" />
+          </AssociationSet>
+          <AssociationSet Name="fk_FavActors" Association="Self.fk_FavActors">
+            <End Role="Actors" EntitySet="Actors" />
+            <End Role="User_fv_Actors" EntitySet="User_fv_Actors" />
+          </AssociationSet>
+          <AssociationSet Name="fk_FavDirectors" Association="Self.fk_FavDirectors">
+            <End Role="Directors" EntitySet="Directors" />
+            <End Role="User_fv_directors" EntitySet="User_fv_directors" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="IMDb_dataModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Actor">
+          <Key>
+            <PropertyRef Name="actorID" />
+          </Key>
+          <Property Name="actorID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="firstName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="lastName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="actorAge" Type="Int32" Nullable="false" />
+          <Property Name="actor_photo" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="info" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Movies" Relationship="Self.ActsIn" FromRole="Actors" ToRole="Movies" />
+          <NavigationProperty Name="Users" Relationship="Self.User_fv_Actors" FromRole="Actors" ToRole="Users" />
+        </EntityType>
+        <EntityType Name="Admin">
+          <Key>
+            <PropertyRef Name="username" />
+            <PropertyRef Name="password" />
+          </Key>
+          <Property Name="username" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="password" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Director">
+          <Key>
+            <PropertyRef Name="directorID" />
+          </Key>
+          <Property Name="directorID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="firstName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="lastName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="directorAge" Type="Int32" Nullable="false" />
+          <Property Name="info" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="director_photo" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <NavigationProperty Name="Movies" Relationship="Self.FK__Movies__director__3B75D760" FromRole="Directors" ToRole="Movies" />
+          <NavigationProperty Name="Users" Relationship="Self.User_fv_directors" FromRole="Directors" ToRole="Users" />
+        </EntityType>
+        <EntityType Name="Movy">
+          <Key>
+            <PropertyRef Name="name" />
+          </Key>
+          <Property Name="directorID" Type="Int32" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="category" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="paragraph" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="movies_photo" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <NavigationProperty Name="Director" Relationship="Self.FK__Movies__director__3B75D760" FromRole="Movies" ToRole="Directors" />
+          <NavigationProperty Name="user_comment" Relationship="Self.FK__user_comm__movie__3D5E1FD2" FromRole="Movies" ToRole="user_comment" />
+          <NavigationProperty Name="Actors" Relationship="Self.ActsIn" FromRole="Movies" ToRole="Actors" />
+          <NavigationProperty Name="Users" Relationship="Self.User_fv_Movies" FromRole="Movies" ToRole="Users" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="email" Type="String" MaxLength="150" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="firstName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="lastName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="password" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="user_photo" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <NavigationProperty Name="user_comment" Relationship="Self.FK__user_comm__userI__3C69FB99" FromRole="Users" ToRole="user_comment" />
+          <NavigationProperty Name="Actors" Relationship="Self.User_fv_Actors" FromRole="Users" ToRole="Actors" />
+          <NavigationProperty Name="Directors" Relationship="Self.User_fv_directors" FromRole="Users" ToRole="Directors" />
+          <NavigationProperty Name="Movies" Relationship="Self.User_fv_Movies" FromRole="Users" ToRole="Movies" />
+        </EntityType>
+        <EntityType Name="user_comment">
+          <Key>
+            <PropertyRef Name="userID" />
+            <PropertyRef Name="movie_name" />
+            <PropertyRef Name="comment" />
+          </Key>
+          <Property Name="userID" Type="Int32" Nullable="false" />
+          <Property Name="movie_name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="comment" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Movy" Relationship="Self.FK__user_comm__movie__3D5E1FD2" FromRole="user_comment" ToRole="Movies" />
+          <NavigationProperty Name="User" Relationship="Self.FK__user_comm__userI__3C69FB99" FromRole="user_comment" ToRole="Users" />
+        </EntityType>
+        <Association Name="FK__Movies__director__3B75D760">
+          <End Role="Directors" Type="Self.Director" Multiplicity="0..1" />
+          <End Role="Movies" Type="Self.Movy" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Directors">
+              <PropertyRef Name="directorID" />
+            </Principal>
+            <Dependent Role="Movies">
+              <PropertyRef Name="directorID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__user_comm__movie__3D5E1FD2">
+          <End Role="Movies" Type="Self.Movy" Multiplicity="1" />
+          <End Role="user_comment" Type="Self.user_comment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Movies">
+              <PropertyRef Name="name" />
+            </Principal>
+            <Dependent Role="user_comment">
+              <PropertyRef Name="movie_name" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__user_comm__userI__3C69FB99">
+          <End Role="Users" Type="Self.User" Multiplicity="1" />
+          <End Role="user_comment" Type="Self.user_comment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="user_comment">
+              <PropertyRef Name="userID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ActsIn">
+          <End Role="Actors" Type="Self.Actor" Multiplicity="*" />
+          <End Role="Movies" Type="Self.Movy" Multiplicity="*" />
+        </Association>
+        <Association Name="User_fv_Actors">
+          <End Role="Users" Type="Self.User" Multiplicity="*" />
+          <End Role="Actors" Type="Self.Actor" Multiplicity="*" />
+        </Association>
+        <Association Name="User_fv_directors">
+          <End Role="Users" Type="Self.User" Multiplicity="*" />
+          <End Role="Directors" Type="Self.Director" Multiplicity="*" />
+        </Association>
+        <Association Name="User_fv_Movies">
+          <End Role="Movies" Type="Self.Movy" Multiplicity="*" />
+          <End Role="Users" Type="Self.User" Multiplicity="*" />
+        </Association>
+        <EntityContainer Name="IMDb_dataEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Actors" EntityType="Self.Actor" />
+          <EntitySet Name="Admins" EntityType="Self.Admin" />
+          <EntitySet Name="Directors" EntityType="Self.Director" />
+          <EntitySet Name="Movies" EntityType="Self.Movy" />
+          <EntitySet Name="Users" EntityType="Self.User" />
+          <EntitySet Name="user_comment" EntityType="Self.user_comment" />
+          <AssociationSet Name="FK__Movies__director__3B75D760" Association="Self.FK__Movies__director__3B75D760">
+            <End Role="Directors" EntitySet="Directors" />
+            <End Role="Movies" EntitySet="Movies" />
+          </AssociationSet>
+          <AssociationSet Name="FK__user_comm__movie__3D5E1FD2" Association="Self.FK__user_comm__movie__3D5E1FD2">
+            <End Role="Movies" EntitySet="Movies" />
+            <End Role="user_comment" EntitySet="user_comment" />
+          </AssociationSet>
+          <AssociationSet Name="FK__user_comm__userI__3C69FB99" Association="Self.FK__user_comm__userI__3C69FB99">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="user_comment" EntitySet="user_comment" />
+          </AssociationSet>
+          <AssociationSet Name="ActsIn" Association="Self.ActsIn">
+            <End Role="Actors" EntitySet="Actors" />
+            <End Role="Movies" EntitySet="Movies" />
+          </AssociationSet>
+          <AssociationSet Name="User_fv_Actors" Association="Self.User_fv_Actors">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Actors" EntitySet="Actors" />
+          </AssociationSet>
+          <AssociationSet Name="User_fv_directors" Association="Self.User_fv_directors">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Directors" EntitySet="Directors" />
+          </AssociationSet>
+          <AssociationSet Name="User_fv_Movies" Association="Self.User_fv_Movies">
+            <End Role="Movies" EntitySet="Movies" />
+            <End Role="Users" EntitySet="Users" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="IMDb_dataModelStoreContainer" CdmEntityContainer="IMDb_dataEntities">
+          <EntitySetMapping Name="Actors">
+            <EntityTypeMapping TypeName="IMDb_dataModel.Actor">
+              <MappingFragment StoreEntitySet="Actors">
+                <ScalarProperty Name="actorID" ColumnName="actorID" />
+                <ScalarProperty Name="firstName" ColumnName="firstName" />
+                <ScalarProperty Name="lastName" ColumnName="lastName" />
+                <ScalarProperty Name="actorAge" ColumnName="actorAge" />
+                <ScalarProperty Name="actor_photo" ColumnName="actor_photo" />
+                <ScalarProperty Name="info" ColumnName="info" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Admins">
+            <EntityTypeMapping TypeName="IMDb_dataModel.Admin">
+              <MappingFragment StoreEntitySet="Admins">
+                <ScalarProperty Name="username" ColumnName="username" />
+                <ScalarProperty Name="password" ColumnName="password" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Directors">
+            <EntityTypeMapping TypeName="IMDb_dataModel.Director">
+              <MappingFragment StoreEntitySet="Directors">
+                <ScalarProperty Name="directorID" ColumnName="directorID" />
+                <ScalarProperty Name="firstName" ColumnName="firstName" />
+                <ScalarProperty Name="lastName" ColumnName="lastName" />
+                <ScalarProperty Name="directorAge" ColumnName="directorAge" />
+                <ScalarProperty Name="info" ColumnName="info" />
+                <ScalarProperty Name="director_photo" ColumnName="director_photo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Movies">
+            <EntityTypeMapping TypeName="IMDb_dataModel.Movy">
+              <MappingFragment StoreEntitySet="Movies">
+                <ScalarProperty Name="directorID" ColumnName="directorID" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="category" ColumnName="category" />
+                <ScalarProperty Name="paragraph" ColumnName="paragraph" />
+                <ScalarProperty Name="movies_photo" ColumnName="movies_photo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="IMDb_dataModel.User">
+              <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="firstName" ColumnName="firstName" />
+                <ScalarProperty Name="lastName" ColumnName="lastName" />
+                <ScalarProperty Name="password" ColumnName="password" />
+                <ScalarProperty Name="user_photo" ColumnName="user_photo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="user_comment">
+            <EntityTypeMapping TypeName="IMDb_dataModel.user_comment">
+              <MappingFragment StoreEntitySet="user_comment">
+                <ScalarProperty Name="userID" ColumnName="userID" />
+                <ScalarProperty Name="movie_name" ColumnName="movie_name" />
+                <ScalarProperty Name="comment" ColumnName="comment" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="ActsIn" TypeName="IMDb_dataModel.ActsIn" StoreEntitySet="ActsIn">
+            <EndProperty Name="Actors">
+              <ScalarProperty Name="actorID" ColumnName="actorID" />
+            </EndProperty>
+            <EndProperty Name="Movies">
+              <ScalarProperty Name="name" ColumnName="movieName" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="User_fv_Actors" TypeName="IMDb_dataModel.User_fv_Actors" StoreEntitySet="User_fv_Actors">
+            <EndProperty Name="Users">
+              <ScalarProperty Name="ID" ColumnName="userID" />
+            </EndProperty>
+            <EndProperty Name="Actors">
+              <ScalarProperty Name="actorID" ColumnName="actorID" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="User_fv_directors" TypeName="IMDb_dataModel.User_fv_directors" StoreEntitySet="User_fv_directors">
+            <EndProperty Name="Users">
+              <ScalarProperty Name="ID" ColumnName="userID" />
+            </EndProperty>
+            <EndProperty Name="Directors">
+              <ScalarProperty Name="directorID" ColumnName="directorID" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="User_fv_Movies" TypeName="IMDb_dataModel.User_fv_Movies" StoreEntitySet="User_fv_Movies">
+            <EndProperty Name="Movies">
+              <ScalarProperty Name="name" ColumnName="movieName" />
+            </EndProperty>
+            <EndProperty Name="Users">
+              <ScalarProperty Name="ID" ColumnName="userID" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="true" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

@@ -12,13 +12,9 @@ namespace IMDB.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class user_comment
+    public partial class Admin
     {
-        public int userID { get; set; }
-        public string movie_name { get; set; }
-        public string comment { get; set; }
-    
-        public virtual Movy Movy { get; set; }
-        public virtual User User { get; set; }
+        public string username { get; set; }
+        public string password { get; set; }
     }
 }
