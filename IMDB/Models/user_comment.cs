@@ -19,7 +19,7 @@ namespace IMDB.Models
         public string comment { get; set; }
         public int number { get; set; }
     
-        public virtual Movies Movies { get; set; }
-        public virtual Users Users { get; set; }
+        public virtual Movy Movy { get; set; }
+        public virtual User User { get; set; }
     }
 }
